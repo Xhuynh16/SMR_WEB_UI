@@ -1,0 +1,54 @@
+<div class="room-map-container">
+    <div class="floor-selector">
+        <div class="floor-label">Tầng:</div>
+        <div class="floor-buttons">
+            <button *ngFor="let floorPlan of floorPlans" [class.active]="selectedFloor === floorPlan.floor"
+                (click)="selectFloor(floorPlan.floor)">
+                {{ floorPlan.floor }}
+            </button>
+        </div>
+    </div>
+
+    <div class="map-legend">
+        <div class="legend-item">
+            <div class="status-indicator available"></div>
+            <span>Trống</span>
+        </div>
+        <div class="legend-item">
+            <div class="status-indicator occupied"></div>
+            <span>Đang sử dụng</span>
+        </div>
+        <div class="legend-item">
+            <div class="status-indicator maintenance"></div>
+            <span>Bảo trì</span>
+        </div>
+    </div>
+
+    <div class="floor-map">
+        <div class="map-background">
+            <!-- Giả lập bản đồ tầng với hình ảnh nền -->
+            <img src="assets/images/floor-plan.png" alt="Sơ đồ tầng">
+
+            <!-- Hiển thị các phòng họp trên bản đồ -->
+            <ng-container *ngFor="let floorPlan of floorPlans">
+                <ng-container *ngIf="floorPlan.floor === selectedFloor">
+                    <div *ngFor="let room of floorPlan.rooms" class="room-marker"
+                        [class]="getRoomStatusClass(room.status)" [style.left.px]="room.location.x"
+                        [style.top.px]="room.location.y" (click)="selectRoom(room)">
+                        <i class="fas" [class]="getRoomStatusIcon(room.status)"></i>
+                        <div class="room-tooltip">
+                            <div class="room-name">{{ room.name }}</div>
+                            <div class="room-capacity">
+                                <i class="fas fa-user"></i> {{ room.capacity }} người
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="map-instructions">
+        <p><i class="fas fa-info-circle"></i> Nhấp vào phòng họp trên bản đồ để xem thông tin chi tiết.</p>
+    </div>
+</div>

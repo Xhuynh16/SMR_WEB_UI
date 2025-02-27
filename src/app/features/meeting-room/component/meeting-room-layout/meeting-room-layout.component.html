@@ -1,0 +1,73 @@
+<div class="meeting-room-container">
+    <div class="header">
+        <h1>Quản lý phòng họp</h1>
+        <div class="view-toggle">
+            <button [class.active]="isMapView" (click)="toggleView()">
+                <i class="fas fa-map"></i> Bản đồ
+            </button>
+            <button [class.active]="!isMapView" (click)="toggleView()">
+                <i class="fas fa-list"></i> Danh sách
+            </button>
+        </div>
+    </div>
+
+    <div class="filters-container">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Tìm kiếm phòng họp...">
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Trạng thái:</label>
+                <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+                    <option [ngValue]="null">Tất cả</option>
+                    <option [ngValue]="'available'">Trống</option>
+                    <option [ngValue]="'occupied'">Đang sử dụng</option>
+                    <option [ngValue]="'maintenance'">Bảo trì</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Sức chứa tối thiểu:</label>
+                <input type="number" [(ngModel)]="capacityFilter" (change)="applyFilters()" placeholder="Số người">
+            </div>
+
+            <div class="filter-group">
+                <label>Thiết bị:</label>
+                <div class="equipment-checkboxes">
+                    <label>
+                        <input type="checkbox" [checked]="equipmentFilter.includes('máy chiếu')"
+                            (change)="toggleEquipmentFilter('máy chiếu')"> Máy chiếu
+                    </label>
+                    <label>
+                        <input type="checkbox" [checked]="equipmentFilter.includes('âm thanh')"
+                            (change)="toggleEquipmentFilter('âm thanh') "> Hệ thống âm thanh
+                    </label>
+                    <label>
+                        <input type="checkbox" [checked]="equipmentFilter.includes('hội nghị')"
+                            (change)="toggleEquipmentFilter('hội nghị')"> Hệ thống hội nghị
+                    </label>
+                </div>
+            </div>
+
+            <button class="reset-btn" (click)="resetFilters()">
+                <i class="fas fa-redo"></i> Đặt lại
+            </button>
+        </div>
+    </div>
+
+    <div class="content-container" [class.map-view]="isMapView" [class.list-view]="!isMapView">
+        <div class="map-container" *ngIf="isMapView">
+            <app-room-map [rooms]="filteredRooms" (roomSelected)="selectRoom($event)"></app-room-map>
+        </div>
+
+        <div class="list-container" *ngIf="!isMapView">
+            <app-room-list [rooms]="filteredRooms" (roomSelected)="selectRoom($event)"></app-room-list>
+        </div>
+
+        <div class="detail-container" *ngIf="selectedRoom">
+            <app-room-detail [room]="selectedRoom" (close)="closeDetail()"></app-room-detail>
+        </div>
+    </div>
+</div>

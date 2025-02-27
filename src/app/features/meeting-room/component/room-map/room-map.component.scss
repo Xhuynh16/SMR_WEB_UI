@@ -1,0 +1,197 @@
+.room-map-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+
+    .floor-selector {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .floor-label {
+            font-weight: 500;
+            margin-right: 12px;
+        }
+
+        .floor-buttons {
+            display: flex;
+            gap: 8px;
+
+            button {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border: 1px solid #e0e0e0;
+                background-color: white;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &.active {
+                    background-color: #1a73e8;
+                    color: white;
+                    border-color: #1a73e8;
+                }
+
+                &:hover:not(.active) {
+                    background-color: #f5f5f5;
+                }
+            }
+        }
+    }
+
+    .map-legend {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding: 12px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .status-indicator {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+
+                &.available {
+                    background-color: #34a853;
+                }
+
+                &.occupied {
+                    background-color: #ea4335;
+                }
+
+                &.maintenance {
+                    background-color: #fbbc05;
+                }
+            }
+        }
+    }
+
+    .floor-map {
+        flex: 1;
+        position: relative;
+        overflow: auto;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .map-background {
+            position: relative;
+            width: 100%;
+            height: 100%;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .room-marker {
+                position: absolute;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: transform 0.2s;
+
+                i {
+                    color: white;
+                    font-size: 16px;
+                }
+
+                &.available {
+                    background-color: #34a853;
+                }
+
+                &.occupied {
+                    background-color: #ea4335;
+                }
+
+                &.maintenance {
+                    background-color: #fbbc05;
+                }
+
+                .room-tooltip {
+                    position: absolute;
+                    bottom: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    white-space: nowrap;
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.2s;
+
+                    .room-name {
+                        font-weight: 500;
+                        margin-bottom: 4px;
+                    }
+
+                    .room-capacity {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                    }
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-width: 6px;
+                        border-style: solid;
+                        border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+                    }
+                }
+
+                &:hover {
+                    transform: scale(1.1);
+                    z-index: 10;
+
+                    .room-tooltip {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    .map-instructions {
+        margin-top: 16px;
+        padding: 12px;
+        background-color: #e8f0fe;
+        border-radius: 8px;
+        color: #1a73e8;
+
+        p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+    .room-map-container {
+        .map-legend {
+            flex-wrap: wrap;
+        }
+    }
+}

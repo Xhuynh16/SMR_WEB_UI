@@ -1,0 +1,68 @@
+<div class="layout-container">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-section" [class.collapsed]="isMenuCollapsed">
+            <div class="logo">
+                <img src="/assets/photo_6197406619084637278_x.jpg" alt="SMR">
+            </div>
+            <button class="toggle-menu" (click)="toggleMenu()">
+                <i class="fas" [class.fa-chevron-left]="!isMenuCollapsed"
+                    [class.fa-chevron-right]="isMenuCollapsed"></i>
+            </button>
+        </div>
+
+        <!-- Horizontal Menu -->
+        <nav class="horizontal-menu">
+            <ul>
+                <li *ngFor="let item of menuItems" [class.active]="(activeMenu$ | async) === item.title"
+                    (click)="setActiveMenu(item.title)">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ item.title }}
+                </li>
+            </ul>
+        </nav>
+
+        <!-- User Info -->
+        <div class="user-info">
+            <div class="notification">
+                <i class="far fa-bell"></i>
+                <span class="badge">21</span>
+            </div>
+            <div class="user-profile" (click)="toggleUserMenu()" #userProfileRef>
+                <span>{{ currentUser?.fullName }}</span>
+                <i class="fas fa-user-circle" style="font-size: 32px;"></i>
+                <div class="user-dropdown" *ngIf="isUserMenuOpen">
+                    <div class="dropdown-item">
+                        <i class="fas fa-user"></i>
+                        <span>Thông tin cá nhân</span>
+                    </div>
+                    <div class="dropdown-item" (click)="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Đăng xuất</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- Vertical Menu -->
+        <aside class="vertical-menu" [class.collapsed]="isMenuCollapsed">
+            <ul>
+                <li *ngFor="let child of (activeMenu$ | async) | getMenuChildren:menuItems"
+                    [title]="isMenuCollapsed ? child : ''" [routerLink]="getRouteForMenuItem(child)"
+                    routerLinkActive="active">
+                    <i class="fas fa-circle"></i>
+                    <span [class.hidden]="isMenuCollapsed">{{ child }}</span>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

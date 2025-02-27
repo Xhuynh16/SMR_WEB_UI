@@ -1,0 +1,71 @@
+<div class="report-issue-container">
+    <div class="report-issue-header">
+        <h2>Báo cáo sự cố</h2>
+        <button class="close-btn" (click)="cancel()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="report-issue-content">
+        <div class="room-info" *ngIf="room">
+            <h3>{{ room.name }}</h3>
+            <div class="room-details">
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Vị trí: Tầng {{ room.location.floor }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="type">Loại sự cố <span class="required">*</span></label>
+                <select id="type" formControlName="type">
+                    <option value="">-- Chọn loại sự cố --</option>
+                    <option value="cleaning">Vệ sinh</option>
+                    <option value="equipment">Thiết bị</option>
+                    <option value="other">Khác</option>
+                </select>
+                <div class="error-message"
+                    *ngIf="reportForm.get('type')?.touched && reportForm.get('type')?.errors?.['required']">
+                    Vui lòng chọn loại sự cố
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả chi tiết <span class="required">*</span></label>
+                <textarea id="description" formControlName="description" rows="5"
+                    placeholder="Mô tả chi tiết về sự cố bạn gặp phải..."></textarea>
+                <div class="error-message"
+                    *ngIf="reportForm.get('description')?.touched && reportForm.get('description')?.errors?.['required']">
+                    Vui lòng nhập mô tả chi tiết
+                </div>
+                <div class="error-message"
+                    *ngIf="reportForm.get('description')?.touched && reportForm.get('description')?.errors?.['minlength']">
+                    Mô tả phải có ít nhất 10 ký tự
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reportedBy">Người báo cáo <span class="required">*</span></label>
+                <input type="text" id="reportedBy" formControlName="reportedBy" placeholder="Nhập tên người báo cáo">
+                <div class="error-message"
+                    *ngIf="reportForm.get('reportedBy')?.touched && reportForm.get('reportedBy')?.errors?.['required']">
+                    Vui lòng nhập tên người báo cáo
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="report-issue-actions">
+        <button class="action-btn submit-btn" (click)="onSubmit()" [disabled]="isSubmitting || reportForm.invalid">
+            <i class="fas" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting"
+                [class.fa-paper-plane]="!isSubmitting"></i>
+            {{ isSubmitting ? 'Đang gửi báo cáo...' : 'Gửi báo cáo' }}
+        </button>
+
+        <button class="action-btn cancel-btn" (click)="cancel()">
+            <i class="fas fa-times"></i> Hủy bỏ
+        </button>
+    </div>
+</div>

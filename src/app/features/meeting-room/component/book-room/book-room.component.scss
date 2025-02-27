@@ -1,0 +1,248 @@
+.book-room-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f8f9fa;
+
+    .book-room-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 24px;
+        background-color: white;
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        h2 {
+            font-size: 20px;
+            color: #333;
+            margin: 0;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: #e0e0e0;
+            }
+        }
+    }
+
+    .book-room-content {
+        flex: 1;
+        overflow: auto;
+        padding: 24px;
+
+        .room-info {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+            h3 {
+                margin-top: 0;
+                margin-bottom: 12px;
+                font-size: 18px;
+                color: #333;
+            }
+
+            .room-details {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+
+                .detail-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #666;
+
+                    i {
+                        color: #1a73e8;
+                    }
+                }
+            }
+        }
+
+        .availability-warning {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background-color: #fef7e0;
+            border-radius: 8px;
+            margin-bottom: 24px;
+
+            i {
+                color: #f9ab00;
+                font-size: 20px;
+            }
+
+            span {
+                color: #333;
+            }
+        }
+
+        form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+            .form-row {
+                display: flex;
+                gap: 16px;
+
+                .form-group {
+                    flex: 1;
+                }
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+
+                label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 500;
+                    color: #333;
+
+                    .required {
+                        color: #ea4335;
+                    }
+                }
+
+                input[type="text"],
+                input[type="number"],
+                input[type="date"],
+                input[type="time"] {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 4px;
+                    font-size: 14px;
+
+                    &:focus {
+                        outline: none;
+                        border-color: #1a73e8;
+                        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+                    }
+                }
+
+                .error-message {
+                    color: #ea4335;
+                    font-size: 12px;
+                    margin-top: 4px;
+                }
+
+                .equipment-list {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                    gap: 12px;
+
+                    .equipment-item {
+                        label {
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            font-weight: normal;
+                            cursor: pointer;
+
+                            input {
+                                margin: 0;
+                            }
+                        }
+                    }
+
+                    .no-equipment {
+                        color: #666;
+                        font-style: italic;
+                    }
+                }
+            }
+        }
+    }
+
+    .book-room-actions {
+        display: flex;
+        gap: 12px;
+        padding: 16px 24px;
+        background-color: white;
+        border-top: 1px solid #e0e0e0;
+
+        .action-btn {
+            padding: 10px 16px;
+            border-radius: 4px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            &.check-btn {
+                background-color: #e8f0fe;
+                color: #1a73e8;
+
+                &:not(:disabled):hover {
+                    background-color: #d2e3fc;
+                }
+            }
+
+            &.book-btn {
+                background-color: #1a73e8;
+                color: white;
+                flex: 1;
+
+                &:not(:disabled):hover {
+                    background-color: #1765cc;
+                }
+            }
+
+            &.cancel-btn {
+                background-color: #f5f5f5;
+                color: #333;
+
+                &:hover {
+                    background-color: #e0e0e0;
+                }
+            }
+        }
+    }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+    .book-room-container {
+        .book-room-content {
+            form {
+                .form-row {
+                    flex-direction: column;
+                    gap: 0;
+                }
+            }
+        }
+
+        .book-room-actions {
+            flex-direction: column;
+        }
+    }
+}

@@ -1,0 +1,141 @@
+<div class="book-room-container">
+    <div class="book-room-header">
+        <h2>Đặt phòng họp</h2>
+        <button class="close-btn" (click)="cancel()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="book-room-content">
+        <div class="room-info" *ngIf="room">
+            <h3>{{ room.name }}</h3>
+            <div class="room-details">
+                <div class="detail-item">
+                    <i class="fas fa-users"></i>
+                    <span>Sức chứa: {{ room.capacity }} người</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Vị trí: Tầng {{ room.location.floor }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="availability-warning" *ngIf="!isAvailable">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Phòng họp này hiện không khả dụng. Vui lòng chọn phòng khác.</span>
+        </div>
+
+        <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" *ngIf="isAvailable">
+            <div class="form-group">
+                <label for="subject">Chủ đề cuộc họp <span class="required">*</span></label>
+                <input type="text" id="subject" formControlName="subject" placeholder="Nhập chủ đề cuộc họp">
+                <div class="error-message"
+                    *ngIf="bookingForm.get('subject')?.touched && bookingForm.get('subject')?.errors?.['required']">
+                    Vui lòng nhập chủ đề cuộc họp
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startDate">Ngày bắt đầu <span class="required">*</span></label>
+                    <input type="date" id="startDate" formControlName="startDate">
+                    <div class="error-message"
+                        *ngIf="bookingForm.get('startDate')?.touched && bookingForm.get('startDate')?.errors?.['required']">
+                        Vui lòng chọn ngày bắt đầu
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startTime">Giờ bắt đầu <span class="required">*</span></label>
+                    <input type="time" id="startTime" formControlName="startTime">
+                    <div class="error-message"
+                        *ngIf="bookingForm.get('startTime')?.touched && bookingForm.get('startTime')?.errors?.['required']">
+                        Vui lòng chọn giờ bắt đầu
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="endDate">Ngày kết thúc <span class="required">*</span></label>
+                    <input type="date" id="endDate" formControlName="endDate">
+                    <div class="error-message"
+                        *ngIf="bookingForm.get('endDate')?.touched && bookingForm.get('endDate')?.errors?.['required']">
+                        Vui lòng chọn ngày kết thúc
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="endTime">Giờ kết thúc <span class="required">*</span></label>
+                    <input type="time" id="endTime" formControlName="endTime">
+                    <div class="error-message"
+                        *ngIf="bookingForm.get('endTime')?.touched && bookingForm.get('endTime')?.errors?.['required']">
+                        Vui lòng chọn giờ kết thúc
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="attendeesCount">Số người tham gia <span class="required">*</span></label>
+                <input type="number" id="attendeesCount" formControlName="attendeesCount"
+                    placeholder="Nhập số người tham gia" min="1" [max]="room?.capacity || 999">
+                <div class="error-message"
+                    *ngIf="bookingForm.get('attendeesCount')?.touched && bookingForm.get('attendeesCount')?.errors?.['required']">
+                    Vui lòng nhập số người tham gia
+                </div>
+                <div class="error-message"
+                    *ngIf="bookingForm.get('attendeesCount')?.touched && bookingForm.get('attendeesCount')?.errors?.['min']">
+                    Số người tham gia phải lớn hơn 0
+                </div>
+                <div class="error-message" *ngIf="room && bookingForm.get('attendeesCount')?.value > room.capacity">
+                    Số người tham gia không được vượt quá sức chứa của phòng ({{ room.capacity }} người)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Thiết bị cần thiết</label>
+                <div class="equipment-list">
+                    <div class="equipment-item" *ngFor="let equipment of workingEquipment">
+                        <label>
+                            <input type="checkbox" [value]="equipment.id"
+                                (change)="toggleEquipment(equipment.id, $event)">
+                            {{ equipment.name }}
+                        </label>
+                    </div>
+                    <div *ngIf="workingEquipment.length === 0" class="no-equipment">
+                        Không có thiết bị nào khả dụng
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="requestedBy">Người yêu cầu <span class="required">*</span></label>
+                <input type="text" id="requestedBy" formControlName="requestedBy" placeholder="Nhập tên người yêu cầu">
+                <div class="error-message"
+                    *ngIf="bookingForm.get('requestedBy')?.touched && bookingForm.get('requestedBy')?.errors?.['required']">
+                    Vui lòng nhập tên người yêu cầu
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="book-room-actions" *ngIf="isAvailable">
+        <button class="action-btn check-btn" (click)="checkAvailability()"
+            [disabled]="isCheckingAvailability || bookingForm.invalid">
+            <i class="fas" [class.fa-spinner]="isCheckingAvailability" [class.fa-spin]="isCheckingAvailability"
+                [class.fa-check]="!isCheckingAvailability"></i>
+            {{ isCheckingAvailability ? 'Đang kiểm tra...' : 'Kiểm tra trạng thái' }}
+        </button>
+
+        <button class="action-btn book-btn" (click)="onSubmit()" [disabled]="isSubmitting || bookingForm.invalid">
+            <i class="fas" [class.fa-spinner]="isSubmitting" [class.fa-spin]="isSubmitting"
+                [class.fa-calendar-plus]="!isSubmitting"></i>
+            {{ isSubmitting ? 'Đang đặt phòng...' : 'Đặt phòng' }}
+        </button>
+
+        <button class="action-btn cancel-btn" (click)="cancel()">
+            <i class="fas fa-times"></i> Hủy bỏ
+        </button>
+    </div>
+</div>
