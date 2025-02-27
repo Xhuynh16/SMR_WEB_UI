@@ -1,0 +1,40 @@
+<div class="recurring-meeting-form">
+    <div class="form-group">
+        <label for="frequency">Tần suất <span class="required">*</span></label>
+        <select id="frequency" formControlName="frequency">
+            <option value="daily">Hàng ngày</option>
+            <option value="weekly">Hàng tuần</option>
+            <option value="monthly">Hàng tháng</option>
+        </select>
+    </div>
+
+    <div class="form-group" *ngIf="frequency === 'weekly'">
+        <label>Ngày trong tuần <span class="required">*</span></label>
+        <div class="weekday-selector">
+            <div class="weekday-item" *ngFor="let day of weekDays" [class.selected]="isWeekDaySelected(day.value)"
+                (click)="toggleWeekDay(day.value)">
+                {{ day.label }}
+            </div>
+        </div>
+        <div class="error-message"
+            *ngIf="parentForm.get('weekDays')?.touched && parentForm.get('weekDays')?.value?.length === 0">
+            Vui lòng chọn ít nhất một ngày trong tuần
+        </div>
+    </div>
+
+    <div class="form-group" *ngIf="frequency === 'monthly'">
+        <label for="monthDay">Ngày trong tháng <span class="required">*</span></label>
+        <select id="monthDay" formControlName="monthDay">
+            <option *ngFor="let day of monthDays" [value]="day">Ngày {{ day }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="endRecurringDate">Ngày kết thúc định kỳ <span class="required">*</span></label>
+        <input type="date" id="endRecurringDate" formControlName="endRecurringDate">
+        <div class="error-message"
+            *ngIf="parentForm.get('endRecurringDate')?.touched && parentForm.get('endRecurringDate')?.errors?.['required']">
+            Vui lòng chọn ngày kết thúc định kỳ
+        </div>
+    </div>
+</div>

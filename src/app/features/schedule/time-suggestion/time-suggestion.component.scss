@@ -1,0 +1,151 @@
+
+
+.time-suggestion-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.time-suggestion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333333;
+    }
+
+    .refresh-btn {
+        background: none;
+        border: none;
+        color: #1976d2;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: all 0.2s;
+
+        &:hover {
+            background-color: rgba(#1976d2, 0.05);
+        }
+
+        i {
+            font-size: 14px;
+        }
+    }
+}
+
+.loading-indicator,
+.no-participants-message,
+.no-slots-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    text-align: center;
+    color: #6c757d;
+    gap: 12px;
+
+    i {
+        font-size: 24px;
+    }
+}
+
+.time-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+
+    .time-slot-item {
+        padding: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        &.excellent {
+            background-color: rgba(#28a745, 0.1);
+            border-left-color: #28a745;
+
+            .availability-bar {
+                background-color: #28a745;
+            }
+        }
+
+        &.good {
+            background-color: rgba(#1976d2, 0.1);
+            border-left-color: #1976d2;
+
+            .availability-bar {
+                background-color: #1976d2;
+            }
+        }
+
+        &.fair {
+            background-color: rgba(#ffc107, 0.1);
+            border-left-color: #ffc107;
+
+            .availability-bar {
+                background-color: #ffc107;
+            }
+        }
+
+        &.poor {
+            background-color: rgba(#dc3545, 0.1);
+            border-left-color: #dc3545;
+
+            .availability-bar {
+                background-color: #dc3545;
+            }
+        }
+
+        .time-slot-date {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .time-slot-time {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .time-slot-availability {
+            .availability-indicator {
+                height: 6px;
+                background-color: rgba(0, 0, 0, 0.1);
+                border-radius: 3px;
+                overflow: hidden;
+                margin-bottom: 8px;
+
+                .availability-bar {
+                    height: 100%;
+                    border-radius: 3px;
+                    transition: width 0.3s ease;
+                }
+            }
+
+            .availability-text {
+                font-size: 12px;
+                color: #6c757d;
+            }
+        }
+    }
+}

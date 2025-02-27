@@ -1,0 +1,176 @@
+<div class="meeting-view-container">
+    <div class="meeting-view-header">
+        <div class="header-left">
+            <button class="back-btn" (click)="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Chi tiết cuộc họp</h1>
+        </div>
+
+        <div class="header-right" *ngIf="meeting">
+            <div class="meeting-status" [class]="getMeetingStatusClass()">
+                {{ getMeetingStatusText() }}
+            </div>
+
+            <div class="actions" *ngIf="meeting.status === 'scheduled' && getMyAttendanceStatus() === 'pending'">
+                <button class="btn-success" (click)="acceptInvitation()">
+                    <i class="fas fa-check"></i> Xác nhận tham gia
+                </button>
+                <button class="btn-danger" (click)="toggleDeclineForm()">
+                    <i class="fas fa-times"></i> Báo vắng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" *ngIf="isLoading">
+        <div class="spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+    </div>
+
+    <div class="decline-form" *ngIf="showDeclineForm">
+        <div class="decline-form-content">
+            <h3>Lý do vắng mặt</h3>
+            <textarea [(ngModel)]="declineReason" placeholder="Nhập lý do vắng mặt..."></textarea>
+            <div class="form-actions">
+                <button class="btn-secondary" (click)="toggleDeclineForm()">Hủy</button>
+                <button class="btn-danger" (click)="declineInvitation()" [disabled]="!declineReason">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="meeting-view-content" *ngIf="meeting && !isLoading">
+        <div class="meeting-info">
+            <div class="meeting-subject">
+                <h2>{{ meeting.subject }}</h2>
+            </div>
+
+            <div class="info-section">
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-clock"></i>
+                        <span>Thời gian:</span>
+                    </div>
+                    <div class="info-value">
+                        {{ meeting.startTime | date:'EEEE, dd/MM/yyyy, HH:mm' }} - {{ meeting.endTime | date:'HH:mm' }}
+                        <span class="recurring-badge" *ngIf="meeting.recurring">
+                            <i class="fas fa-redo"></i> Định kỳ
+                        </span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Địa điểm:</span>
+                    </div>
+                    <div class="info-value">
+                        {{ meeting.location.name }}
+                        <span class="location-details">{{ meeting.location.floor }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Chủ trì:</span>
+                    </div>
+                    <div class="info-value">
+                        {{ meeting.organizer.fullName }}
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="meeting.secretary">
+                    <div class="info-label">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Thư ký:</span>
+                    </div>
+                    <div class="info-value">
+                        {{ meeting.secretary.fullName }}
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="meeting.content">
+                    <div class="info-label">
+                        <i class="fas fa-align-left"></i>
+                        <span>Nội dung:</span>
+                    </div>
+                    <div class="info-value content-text">
+                        {{ meeting.content }}
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="meeting.attachments && meeting.attachments.length > 0">
+                    <div class="info-label">
+                        <i class="fas fa-paperclip"></i>
+                        <span>Tài liệu:</span>
+                    </div>
+                    <div class="info-value">
+                        <div class="attachment-list">
+                            <div class="attachment-item" *ngFor="let attachment of meeting.attachments">
+                                <i class="fas"
+                                    [class.fa-file-word]="attachment.name.endsWith('.doc') || attachment.name.endsWith('.docx')"
+                                    [class.fa-file-excel]="attachment.name.endsWith('.xls') || attachment.name.endsWith('.xlsx')"
+                                    [class.fa-file-powerpoint]="attachment.name.endsWith('.ppt') || attachment.name.endsWith('.pptx')"
+                                    [class.fa-file-pdf]="attachment.name.endsWith('.pdf')"
+                                    [class.fa-file]="!isOfficeFile(attachment.name)">
+                                </i>
+                                <span class="attachment-name">{{ attachment.name }}</span>
+                                <button class="download-btn" (click)="downloadAttachment(attachment.id)">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="participant-actions" *ngIf="meeting.status === 'in-progress'">
+                <h3>Tương tác</h3>
+                <div class="action-buttons">
+                    <button class="btn-primary" (click)="registerForSpeaking()">
+                        <i class="fas fa-hand-paper"></i> Đăng ký phát biểu
+                    </button>
+                </div>
+
+                <div class="comment-form">
+                    <h4>Góp ý kiến</h4>
+                    <textarea placeholder="Nhập ý kiến của bạn..."></textarea>
+                    <button class="btn-primary" (click)="submitComment()">
+                        <i class="fas fa-paper-plane"></i> Gửi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="participants-section">
+            <h3>Người tham gia ({{ meeting.participants.length }})</h3>
+
+            <div class="participants-list">
+                <div class="participant-item" *ngFor="let participant of meeting.participants">
+                    <div class="participant-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="participant-info">
+                        <div class="participant-name">{{ participant.fullName }}</div>
+                        <div class="participant-details">
+                            <span>{{ participant.email }}</span>
+                            <span *ngIf="participant.department">{{ participant.department }}</span>
+                        </div>
+                    </div>
+                    <div class="participant-status" [class]="'status-' + participant.status">
+                        {{ participant.status === 'accepted' ? 'Tham gia' :
+                        participant.status === 'declined' ? 'Từ chối' : 'Chờ xác nhận' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="no-meeting-message" *ngIf="!meeting && !isLoading">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>Không tìm thấy thông tin cuộc họp</span>
+        <button class="btn-primary" (click)="goBack()">Quay lại</button>
+    </div>
+</div>

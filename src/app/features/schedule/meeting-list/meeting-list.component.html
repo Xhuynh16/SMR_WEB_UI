@@ -1,0 +1,92 @@
+<div class="meeting-list-container">
+    <div class="meeting-list-header">
+        <div class="header-left">
+            <h1>Lịch họp</h1>
+        </div>
+        <div class="header-right">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm kiếm cuộc họp..." [(ngModel)]="searchQuery"
+                    (input)="onSearchChange($any($event.target).value)">
+            </div>
+            <button class="btn-primary" (click)="createMeeting()">
+                <i class="fas fa-plus"></i> Tạo cuộc họp
+            </button>
+        </div>
+    </div>
+
+    <div class="meeting-list-filters">
+        <div class="filter-tabs">
+            <div class="filter-tab" [class.active]="viewMode === 'upcoming'" (click)="setViewMode('upcoming')">
+                <i class="fas fa-calendar-alt"></i> Sắp diễn ra
+            </div>
+            <div class="filter-tab" [class.active]="viewMode === 'past'" (click)="setViewMode('past')">
+                <i class="fas fa-history"></i> Đã diễn ra
+            </div>
+            <div class="filter-tab" [class.active]="viewMode === 'created'" (click)="setViewMode('created')">
+                <i class="fas fa-user-edit"></i> Tôi tạo
+            </div>
+            <div class="filter-tab" [class.active]="viewMode === 'invited'" (click)="setViewMode('invited')">
+                <i class="fas fa-envelope"></i> Tôi được mời
+            </div>
+            <div class="filter-tab" [class.active]="viewMode === 'all'" (click)="setViewMode('all')">
+                <i class="fas fa-list"></i> Tất cả
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-indicator" *ngIf="isLoading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Đang tải danh sách cuộc họp...</span>
+    </div>
+
+    <div class="meeting-list-content" *ngIf="!isLoading">
+        <div class="meeting-list" *ngIf="filteredMeetings.length > 0">
+            <div class="meeting-item" *ngFor="let meeting of filteredMeetings" (click)="viewMeeting(meeting.id)">
+                <div class="meeting-status" [class]="getMeetingStatusClass(meeting.status)">
+                    {{ getMeetingStatusText(meeting.status) }}
+                </div>
+                <div class="meeting-info">
+                    <div class="meeting-subject">{{ meeting.subject }}</div>
+                    <div class="meeting-time">
+                        <i class="fas fa-clock"></i>
+                        {{ formatTimeRange(meeting.startTime, meeting.endTime) }}
+                        <span class="recurring-badge" *ngIf="meeting.recurring">
+                            <i class="fas fa-redo"></i> Định kỳ
+                        </span>
+                    </div>
+                    <div class="meeting-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ meeting.location.name }}
+                    </div>
+                    <div class="meeting-organizer">
+                        <i class="fas fa-user"></i>
+                        Người tổ chức: {{ meeting.organizer.fullName }}
+                    </div>
+                </div>
+                <div class="meeting-participants">
+                    <div class="participant-count">
+                        <i class="fas fa-users"></i>
+                        {{ meeting.participants.length }} người tham gia
+                    </div>
+                    <div class="participant-avatars">
+                        <div class="participant-avatar" *ngFor="let participant of meeting.participants.slice(0, 3)">
+                            {{ participant.fullName.charAt(0).toUpperCase() }}
+                        </div>
+                        <div class="participant-avatar more" *ngIf="meeting.participants.length > 3">
+                            +{{ meeting.participants.length - 3 }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-meetings-message" *ngIf="filteredMeetings.length === 0">
+            <i class="fas fa-calendar-times"></i>
+            <span>Không có cuộc họp nào</span>
+            <button class="btn-primary" (click)="createMeeting()">
+                <i class="fas fa-plus"></i> Tạo cuộc họp mới
+            </button>
+        </div>
+    </div>
+</div>

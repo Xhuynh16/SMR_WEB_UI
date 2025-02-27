@@ -1,0 +1,202 @@
+<div class="create-meeting-container">
+    <div class="create-meeting-header">
+        <h1>Tạo cuộc họp mới</h1>
+        <div class="actions">
+            <button class="btn-secondary" (click)="cancel()">
+                <i class="fas fa-times"></i> Hủy
+            </button>
+            <button class="btn-primary" (click)="saveMeeting(false)" [disabled]="isLoading">
+                <i class="fas fa-save"></i> Lưu
+            </button>
+            <button class="btn-success" (click)="saveMeeting(true)" [disabled]="isLoading">
+                <i class="fas fa-paper-plane"></i> Lưu và gửi
+            </button>
+        </div>
+    </div>
+
+    <div class="loading-overlay" *ngIf="isLoading">
+        <div class="spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+    </div>
+
+    <div class="create-meeting-content">
+        <form [formGroup]="meetingForm" (ngSubmit)="saveMeeting(true)">
+            <div class="form-layout">
+                <!-- Left Column - Meeting Details -->
+                <div class="form-column">
+                    <div class="form-section">
+                        <h2>Thông tin cuộc họp</h2>
+
+                        <div class="form-group">
+                            <label for="subject">Chủ đề cuộc họp <span class="required">*</span></label>
+                            <input type="text" id="subject" formControlName="subject"
+                                placeholder="Nhập chủ đề cuộc họp">
+                            <div class="error-message"
+                                *ngIf="meetingForm.get('subject')?.touched && meetingForm.get('subject')?.errors?.['required']">
+                                Vui lòng nhập chủ đề cuộc họp
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Ngày bắt đầu <span class="required">*</span></label>
+                                <input type="date" id="startDate" formControlName="startDate">
+                                <div class="error-message"
+                                    *ngIf="meetingForm.get('startDate')?.touched && meetingForm.get('startDate')?.errors?.['required']">
+                                    Vui lòng chọn ngày bắt đầu
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="startTime">Giờ bắt đầu <span class="required">*</span></label>
+                                <input type="time" id="startTime" formControlName="startTime">
+                                <div class="error-message"
+                                    *ngIf="meetingForm.get('startTime')?.touched && meetingForm.get('startTime')?.errors?.['required']">
+                                    Vui lòng chọn giờ bắt đầu
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="endDate">Ngày kết thúc <span class="required">*</span></label>
+                                <input type="date" id="endDate" formControlName="endDate">
+                                <div class="error-message"
+                                    *ngIf="meetingForm.get('endDate')?.touched && meetingForm.get('endDate')?.errors?.['required']">
+                                    Vui lòng chọn ngày kết thúc
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endTime">Giờ kết thúc <span class="required">*</span></label>
+                                <input type="time" id="endTime" formControlName="endTime">
+                                <div class="error-message"
+                                    *ngIf="meetingForm.get('endTime')?.touched && meetingForm.get('endTime')?.errors?.['required']">
+                                    Vui lòng chọn giờ kết thúc
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="time-suggestion">
+                                <button type="button" class="btn-outline" (click)="suggestTime()">
+                                    <i class="fas fa-magic"></i> Đề xuất thời gian
+                                </button>
+                                <app-time-suggestion *ngIf="showSuggestions" [participants]="selectedParticipants"
+                                    (timeSelected)="onTimeSelected($event)">
+                                </app-time-suggestion>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Địa điểm <span class="required">*</span></label>
+                            <select id="location" formControlName="location">
+                                <option value="">-- Chọn phòng họp --</option>
+                                <option *ngFor="let room of availableRooms" [value]="room.id">
+                                    {{ room.name }} (Sức chứa: {{ room.capacity }} người)
+                                </option>
+                            </select>
+                            <div class="error-message"
+                                *ngIf="meetingForm.get('location')?.touched && meetingForm.get('location')?.errors?.['required']">
+                                Vui lòng chọn địa điểm
+                            </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="meetingForm.get('location')?.value">
+                            <div class="room-map">
+                                <h4>Vị trí phòng họp</h4>
+                                <div class="map-container">
+                                    <!-- Map component will be placed here -->
+                                    <img src="assets/room-map-placeholder.png" alt="Room Map">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="chairperson">Chủ trì cuộc họp <span class="required">*</span></label>
+                            <select id="chairperson" formControlName="chairperson">
+                                <option value="">-- Chọn người chủ trì --</option>
+                                <option *ngFor="let participant of availableParticipants" [value]="participant.id">
+                                    {{ participant.fullName }} ({{ participant.department }})
+                                </option>
+                            </select>
+                            <div class="error-message"
+                                *ngIf="meetingForm.get('chairperson')?.touched && meetingForm.get('chairperson')?.errors?.['required']">
+                                Vui lòng chọn người chủ trì
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="secretary">Thư ký cuộc họp</label>
+                            <select id="secretary" formControlName="secretary">
+                                <option value="">-- Chọn thư ký --</option>
+                                <option *ngFor="let participant of availableParticipants" [value]="participant.id">
+                                    {{ participant.fullName }} ({{ participant.department }})
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="content">Nội dung cuộc họp</label>
+                            <textarea id="content" formControlName="content" rows="5"
+                                placeholder="Nhập nội dung cuộc họp..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tài liệu đính kèm</label>
+                            <div class="file-upload-container">
+                                <div class="file-upload">
+                                    <input type="file" id="attachments" multiple (change)="onFileSelected($event)"
+                                        accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf">
+                                    <label for="attachments" class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Tải lên tài liệu</span>
+                                        <small>(.doc, .xls, .ppt, .pdf, tối đa 50MB)</small>
+                                    </label>
+                                </div>
+
+                                <div class="file-list" *ngIf="selectedFiles.length > 0">
+                                    <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                                        <i class="fas"
+                                            [class.fa-file-word]="file.name.endsWith('.doc') || file.name.endsWith('.docx')"
+                                            [class.fa-file-excel]="file.name.endsWith('.xls') || file.name.endsWith('.xlsx')"
+                                            [class.fa-file-powerpoint]="file.name.endsWith('.ppt') || file.name.endsWith('.pptx')"
+                                            [class.fa-file-pdf]="file.name.endsWith('.pdf')"
+                                            [class.fa-file]="!hasKnownFileExtension(file.name)">
+                                        </i>
+                                        <span class="file-name">{{ file.name }}</span>
+                                        <span class="file-size">{{ (file.size / 1024 / 1024).toFixed(2) }} MB</span>
+                                        <button type="button" class="remove-file" (click)="removeFile(i)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group recurring-meeting-toggle">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="isRecurring" formControlName="isRecurring">
+                                <label for="isRecurring">Cuộc họp định kỳ</label>
+                            </div>
+                        </div>
+
+                        <app-recurring-meeting-form *ngIf="isRecurring"
+                            [parentForm]="meetingForm"></app-recurring-meeting-form>
+                    </div>
+                </div>
+
+                <!-- Right Column - Participants -->
+                <div class="form-column">
+                    <div class="form-section">
+                        <h2>Người tham gia <span class="required">*</span></h2>
+                        <app-participant-selector [availableParticipants]="availableParticipants"
+                            (participantsSelected)="onParticipantSelected($event)">
+                        </app-participant-selector>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

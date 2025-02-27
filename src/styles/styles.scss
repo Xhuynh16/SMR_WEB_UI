@@ -1,0 +1,185 @@
+// Button styles
+.btn-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // Primary button - Đã lên lịch
+  &-primary {
+    @extend .btn;
+    background-color: #1a73e8;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: darken(#1a73e8, 10%);
+    }
+  }
+
+  // Edit button - Sửa
+  &-edit {
+    @extend .btn;
+    background-color: #fbbc05;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#fbbc05, 10%);
+    }
+  }
+
+  // Send invitation button - Gửi lại thư mời
+  &-invite {
+    @extend .btn;
+    background-color: #34a853;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#34a853, 10%);
+    }
+  }
+
+  // Schedule button - In lịch họp
+  &-schedule {
+    @extend .btn;
+    background-color: #4285f4;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#4285f4, 10%);
+    }
+  }
+
+  // Close button - Đóng phiên họp
+  &-close {
+    @extend .btn;
+    background-color: #ea4335;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#ea4335, 10%);
+    }
+  }
+
+  // Cancel button - Hủy cuộc họp
+  &-cancel {
+    @extend .btn;
+    background-color: #dc3545;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#dc3545, 10%);
+    }
+  }
+
+  // Outline variant
+  &-outline {
+    @extend .btn;
+    background-color: transparent;
+    border: 1px solid currentColor;
+
+    &.btn-primary {
+      color: #1a73e8;
+      &:hover:not(:disabled) {
+        background-color: rgba(#1a73e8, 0.1);
+      }
+    }
+
+    &.btn-edit {
+      color: #fbbc05;
+      &:hover:not(:disabled) {
+        background-color: rgba(#fbbc05, 0.1);
+      }
+    }
+
+    &.btn-invite {
+      color: #34a853;
+      &:hover:not(:disabled) {
+        background-color: rgba(#34a853, 0.1);
+      }
+    }
+
+    &.btn-schedule {
+      color: #4285f4;
+      &:hover:not(:disabled) {
+        background-color: rgba(#4285f4, 0.1);
+      }
+    }
+
+    &.btn-close {
+      color: #ea4335;
+      &:hover:not(:disabled) {
+        background-color: rgba(#ea4335, 0.1);
+      }
+    }
+
+    &.btn-cancel {
+      color: #dc3545;
+      &:hover:not(:disabled) {
+        background-color: rgba(#dc3545, 0.1);
+      }
+    }
+  }
+}
+
+.confirmation-toast {
+  .toast-message {
+    margin-bottom: 16px;
+  }
+
+  .confirmation-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+
+    button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+
+      &.btn-confirm {
+        background-color: #1a73e8;
+        color: white;
+
+        &:hover {
+          background-color: darken(#1a73e8, 10%);
+        }
+      }
+
+      &.btn-cancel {
+        background-color: #f8f9fa;
+        color: #333;
+        border: 1px solid #dee2e6;
+
+        &:hover {
+          background-color: darken(#f8f9fa, 5%);
+        }
+      }
+    }
+  }
+} 

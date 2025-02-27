@@ -1,0 +1,134 @@
+
+
+.file-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.file-upload-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    transition: all 0.2s;
+
+    &.drag-over {
+        border-color: #1976d2;
+        background-color: rgba(#1976d2, 0.05);
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        i {
+            font-size: 32px;
+            color: #6c757d;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: #333333;
+
+            .browse-text {
+                color: #1976d2;
+                text-decoration: underline;
+            }
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #6c757d;
+        }
+    }
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .file-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+                font-size: 24px;
+
+                &.fa-file-word {
+                    color: #2b579a;
+                }
+
+                &.fa-file-excel {
+                    color: #217346;
+                }
+
+                &.fa-file-powerpoint {
+                    color: #d24726;
+                }
+
+                &.fa-file-pdf {
+                    color: #f40f02;
+                }
+
+                &.fa-file {
+                    color: #6c757d;
+                }
+            }
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+
+            .file-name {
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .file-size {
+                font-size: 12px;
+                color: #6c757d;
+            }
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+
+            &:hover {
+                color: #dc3545;
+                background-color: rgba(#dc3545, 0.1);
+            }
+        }
+    }
+}
